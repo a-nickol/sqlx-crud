@@ -49,7 +49,7 @@ Installing sqlx-crud is similar to installing SQLx.
 ```toml
 # Cargo.toml
 [dependencies]
-sqlx-crud = { version = "0", features = ["runtime-tokio-rustls"] }
+sqlx-crud = { version = "0", features = ["runtime-tokio"] }
 ```
 
 See the [documentation](https://docs.rs/sqlx-crud/latest) for full usage
@@ -71,7 +71,7 @@ Source code for sqlx-crud is available at
 
 ## Tests
 
-The doctests depend on `SQLx` and it's `runtime-tokio-rustls` and `sqlite`
+The doctests depend on `SQLx` and it's `runtime-tokio` and `sqlite`
 features.
 
 The tests can be run with:

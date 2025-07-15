@@ -7,6 +7,6 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["macros"]}
-serenity = "0.11"
-sqlx = { version = "*", features = ["runtime-tokio-rustls", "sqlite"] }
-sqlx-crud = { path = "../..", features = ["runtime-tokio-rustls"] }
+serenity = "0.12.4"
+sqlx = { version = "*", features = ["runtime-tokio", "sqlite"] }
+sqlx-crud = { path = "../..", features = ["runtime-tokio"] }
