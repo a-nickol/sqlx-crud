@@ -172,12 +172,12 @@ where
     /// Returns an owned instance of [sqlx::Arguments]. self is consumed.
     /// Values in the fields are moved in to the `Arguments` instance.
     ///
-    fn insert_args(self) -> <E::Database as Database>::Arguments<'e>;
+    fn insert_args(self) -> ::sqlx::Result<<E::Database as Database>::Arguments<'e>>;
 
     /// Returns an owned instance of [sqlx::Arguments]. self is consumed.
     /// Values in the fields are moved in to the `Arguments` instance.
     ///
-    fn update_args(self) -> <E::Database as Database>::Arguments<'e>;
+    fn update_args(self) -> ::sqlx::Result<<E::Database as Database>::Arguments<'e>>;
 
     /// Returns a future that resolves to an insert or `sqlx::Error` of the
     /// current instance.
@@ -195,7 +195,10 @@ where
     /// ```
     fn create(self, pool: E) -> CrudFut<'e, Self> {
         Box::pin({
-            let args = self.insert_args();
+            let args = match self.insert_args() {
+                Ok(args) => args,
+                Err(err) => return Box::pin(future::err(err)),
+            };
             ::sqlx::query_with::<E::Database, _>(Self::insert_sql(), args)
                 .try_map(|r| Self::from_row(&r))
                 .fetch_one(pool)
@@ -283,7 +286,10 @@ where
     /// ```
     fn update(self, pool: E) -> CrudFut<'e, Self> {
         Box::pin({
-            let args = self.update_args();
+            let args = match self.update_args() {
+                Ok(args) => args,
+                Err(err) => return Box::pin(future::err(err)),
+            };
             ::sqlx::query_with::<E::Database, _>(Self::update_by_id_sql(), args)
                 .try_map(|r| Self::from_row(&r))
                 .fetch_one(pool)
